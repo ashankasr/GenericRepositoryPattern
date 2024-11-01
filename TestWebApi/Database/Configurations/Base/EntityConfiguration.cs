@@ -4,14 +4,23 @@ using TestWebApi.Entities.Base;
 
 namespace TestWebApi.Database.Configurations.Base;
 
-public abstract class EntityConfiguration<TEntity, TId> : IEntityTypeConfiguration<TEntity>
-    where TEntity : Entity<TId>
-    where TId : struct
+public abstract class EntityConfiguration<TEntity> : IEntityTypeConfiguration<TEntity>
+    where TEntity : Entity
 {
     public virtual void Configure(EntityTypeBuilder<TEntity> builder)
     {
         // Set the table name
         builder.ToTable(typeof(TEntity).Name);
+    }
+}
+
+public abstract class EntityConfiguration<TEntity, TId> : EntityConfiguration<TEntity>
+    where TEntity : Entity<TId>
+    where TId : struct
+{
+    public override void Configure(EntityTypeBuilder<TEntity> builder)
+    {
+        base.Configure(builder);
 
         // Set the primary key
         builder.HasKey(e => e.Id);

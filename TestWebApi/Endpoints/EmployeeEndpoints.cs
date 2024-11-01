@@ -50,6 +50,23 @@ namespace TestWebApi.Endpoints
 
                 return;
             }).WithName("Post Marital Status");
+
+            app.MapPost("/ComposeType/{employeeId}", async (
+                Guid employeeId,
+                IRepository<ComposeType> repository,
+                IUnitOfWork unitOfWork) =>
+            {
+
+                await using DbTransaction transaction = await unitOfWork.BeginTransactionAsync();
+
+                await repository.AddAsync(ComposeType.CreateSingle(employeeId));
+
+                await unitOfWork.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+                return;
+            }).WithName("Post Compose Type");
         }
     }
 }
