@@ -1,10 +1,13 @@
+using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using TestWebApi.Entities;
 using TestWebApi.Entities.Base;
+using TestWebApi.Interfaces;
 using TestWebApi.Interfaces.Services;
 
 namespace TestWebApi.Database;
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : DbContext, IUnitOfWork
 {
     private ITokenService tokenService { get; }
 
@@ -59,6 +62,16 @@ public class ApplicationDbContext : DbContext
             entity.ModifiedBy = username;
             entity.ModifiedDate = DateTime.UtcNow;
         }
+    }
+
+    public async Task<DbTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
+    {
+        if (Database.CurrentTransaction is not null)
+        {
+            await Database.CurrentTransaction.DisposeAsync();
+        }
+
+        return (await Database.BeginTransactionAsync(cancellationToken)).GetDbTransaction();
     }
 }
 
