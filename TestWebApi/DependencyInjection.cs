@@ -1,9 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using TestWebApi.Database;
 using TestWebApi.Database.Repositories;
-using TestWebApi.Entities;
-using TestWebApi.Entities.Base;
 using TestWebApi.Entities.Repositories;
+using TestWebApi.Interfaces;
 using TestWebApi.Interfaces.Services;
 using TestWebApi.Services;
 
