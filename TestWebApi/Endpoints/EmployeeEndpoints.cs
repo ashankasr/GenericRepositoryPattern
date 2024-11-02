@@ -1,72 +1,69 @@
+namespace TestWebApi.Endpoints;
+
 using System.Data.Common;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TestWebApi.Database;
 using TestWebApi.Entities;
 using TestWebApi.Entities.Repositories;
 using TestWebApi.Interfaces;
 using TestWebApi.Request;
 
-namespace TestWebApi.Endpoints
+public static class EmployeeEndpoints
 {
-    public static class EmployeeEndpoints
+    public static void MapEmployeeEndpoints(this WebApplication app)
     {
-        public static void MapEmployeeEndpoints(this WebApplication app)
+        app.MapGet("/Employees", async (IAuditableEntityRepository<Employee> repository) =>
         {
-            app.MapGet("/Employees", async (IAuditableEntityRepository<Employee> repository) =>
-            {
-                var result = await repository.GetAllAsync();
-                return result;
-            }).WithName("Get Employee");
+            var result = await repository.GetAllAsync();
+            return result;
+        }).WithName("Get Employee");
 
-            app.MapGet("/Employees/{id}", async (IAuditableEntityRepository<Employee> repository, Guid id) =>
-            {
-                var result = await repository.GetByIdAsync(id);
-                return result;
-            }).WithName("Get Employee by Id");
+        app.MapGet("/Employees/{id}", async (IAuditableEntityRepository<Employee> repository, Guid id) =>
+        {
+            var result = await repository.GetByIdAsync(id);
+            return result;
+        }).WithName("Get Employee by Id");
 
-            app.MapPost("/Employees", async (
-                [FromBody] EmployeePostRequest request,
-                IAuditableEntityRepository<Employee> repository) =>
-            {
-                await repository.AddAsync(Employee.Create(request.FirstName));
+        app.MapPost("/Employees", async (
+            [FromBody] EmployeePostRequest request,
+            IAuditableEntityRepository<Employee> repository) =>
+        {
+            await repository.AddAsync(Employee.Create(request.FirstName));
 
-                return;
-            }).WithName("Post Employee");
+            return;
+        }).WithName("Post Employee");
 
-            app.MapPost("/MaritalStatus", async (
-                [FromBody] EmployeePostRequest request,
-                ILookupEntityRepository<MaritalStatus> repository,
-                IUnitOfWork unitOfWork) =>
-            {
+        app.MapPost("/MaritalStatus", async (
+            [FromBody] EmployeePostRequest request,
+            ILookupEntityRepository<MaritalStatus> repository,
+            IUnitOfWork unitOfWork) =>
+        {
 
-                await using DbTransaction transaction = await unitOfWork.BeginTransactionAsync();
+            await using DbTransaction transaction = await unitOfWork.BeginTransactionAsync();
 
-                await repository.AddAsync(MaritalStatus.Create(request.FirstName));
+            await repository.AddAsync(MaritalStatus.Create(request.FirstName));
 
-                await unitOfWork.SaveChangesAsync();
+            await unitOfWork.SaveChangesAsync();
 
-                await transaction.CommitAsync();
+            await transaction.CommitAsync();
 
-                return;
-            }).WithName("Post Marital Status");
+            return;
+        }).WithName("Post Marital Status");
 
-            app.MapPost("/ComposeType/{employeeId}", async (
-                Guid employeeId,
-                IRepository<ComposeType> repository,
-                IUnitOfWork unitOfWork) =>
-            {
+        app.MapPost("/ComposeType/{employeeId}", async (
+            Guid employeeId,
+            IRepository<ComposeType> repository,
+            IUnitOfWork unitOfWork) =>
+        {
 
-                await using DbTransaction transaction = await unitOfWork.BeginTransactionAsync();
+            await using DbTransaction transaction = await unitOfWork.BeginTransactionAsync();
 
-                await repository.AddAsync(ComposeType.CreateSingle(employeeId));
+            await repository.AddAsync(ComposeType.CreateSingle(employeeId));
 
-                await unitOfWork.SaveChangesAsync();
+            await unitOfWork.SaveChangesAsync();
 
-                await transaction.CommitAsync();
+            await transaction.CommitAsync();
 
-                return;
-            }).WithName("Post Compose Type");
-        }
+            return;
+        }).WithName("Post Compose Type");
     }
 }

@@ -1,3 +1,5 @@
+namespace TestWebApi.Database;
+
 using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -6,7 +8,6 @@ using TestWebApi.Entities.Base;
 using TestWebApi.Interfaces;
 using TestWebApi.Interfaces.Services;
 
-namespace TestWebApi.Database;
 public class ApplicationDbContext : DbContext, IUnitOfWork
 {
     private ITokenService tokenService { get; }

@@ -1,3 +1,5 @@
+namespace TestWebApi;
+
 using Microsoft.EntityFrameworkCore;
 using TestWebApi.Database;
 using TestWebApi.Database.Repositories;
@@ -5,8 +7,6 @@ using TestWebApi.Entities.Repositories;
 using TestWebApi.Interfaces;
 using TestWebApi.Interfaces.Services;
 using TestWebApi.Services;
-
-namespace TestWebApi;
 
 public static class DependencyInjection
 {
