@@ -1,6 +1,7 @@
 namespace TestWebApi.Database;
 
 using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using TestWebApi.Entities;
@@ -33,35 +34,47 @@ public class ApplicationDbContext : DbContext, IUnitOfWork
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        UpdateAuditableEntities();
+        Interceptor();
         return base.SaveChangesAsync(cancellationToken);
     }
 
     public override int SaveChanges()
     {
-        UpdateAuditableEntities();
+        Interceptor();
+
         return base.SaveChanges();
     }
 
-    private void UpdateAuditableEntities()
+    private void Interceptor()
     {
         var username = this.tokenService.GetUsername();
+        var now = DateTime.UtcNow;
 
-        var entries = ChangeTracker.Entries()
+        var auditableEntries = ChangeTracker.Entries()
             .Where(e => e.Entity is AuditableEntity && (e.State == EntityState.Added || e.State == EntityState.Modified));
 
-        foreach (var entry in entries)
+        var softDeleteEntries = ChangeTracker.Entries()
+            .Where(e => e.Entity is ISoftDelete && e.State == EntityState.Deleted);
+
+        foreach (var entry in auditableEntries)
         {
             var entity = (AuditableEntity)entry.Entity;
 
             if (entry.State == EntityState.Added)
             {
-                entity.CreatedDate = DateTime.UtcNow;
+                entity.CreatedDate = now;
                 entity.CreatedBy = username;
             }
 
             entity.ModifiedBy = username;
-            entity.ModifiedDate = DateTime.UtcNow;
+            entity.ModifiedDate = now;
+        }
+
+        foreach (var entry in softDeleteEntries)
+        {
+            var entity = (ISoftDelete)entry.Entity;
+            entity.IsDeleted = true;
+            entry.State = EntityState.Modified;
         }
     }
 

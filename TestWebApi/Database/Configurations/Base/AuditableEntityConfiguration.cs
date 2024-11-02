@@ -14,5 +14,8 @@ public abstract class AuditableEntityConfiguration<TEntity> : EntityConfiguratio
         builder.Property(e => e.CreatedBy).IsRequired().HasColumnType("nvarchar(100)");
         builder.Property(e => e.ModifiedDate);
         builder.Property(e => e.ModifiedBy).HasColumnType("nvarchar(100)");
+        builder.Property(e => e.IsDeleted).IsRequired().HasDefaultValue(false);
+
+        builder.HasQueryFilter(e => !e.IsDeleted);
     }
 }
