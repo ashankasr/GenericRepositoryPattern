@@ -1,4 +1,4 @@
-cd TestWebApi
+cd GenericRepositoryPattern
 
 dotnet ef migrations add InitialCreate --output-dir Database/Migrations/
 
