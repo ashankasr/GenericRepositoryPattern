@@ -13,5 +13,7 @@ public class MaritalStatusConfiguration : LookupEntityConfiguration<MaritalStatu
         builder.Property(e => e.Name)
             .IsRequired()
             .HasMaxLength(50);
+
+            builder.HasQueryFilter(e => e.Name == "Single");
     }
 }
