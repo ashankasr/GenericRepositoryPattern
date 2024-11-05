@@ -33,14 +33,14 @@ public static class EmployeeEndpoints
         }).WithName("Post Employee");
 
         app.MapPost("/MaritalStatus", async (
-            [FromBody] EmployeePostRequest request,
+            [FromBody] MaritalStatusRequest request,
             ILookupEntityRepository<MaritalStatus> repository,
             IUnitOfWork unitOfWork) =>
         {
 
             await using DbTransaction transaction = await unitOfWork.BeginTransactionAsync();
 
-            await repository.AddAsync(MaritalStatus.Create(request.FirstName));
+            await repository.AddAsync(MaritalStatus.Create(request.Name));
 
             await unitOfWork.SaveChangesAsync();
 
