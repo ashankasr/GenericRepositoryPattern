@@ -37,7 +37,6 @@ public static class EmployeeEndpoints
             ILookupEntityRepository<MaritalStatus> repository,
             IUnitOfWork unitOfWork) =>
         {
-
             await using DbTransaction transaction = await unitOfWork.BeginTransactionAsync();
 
             await repository.AddAsync(MaritalStatus.Create(request.Name));
@@ -54,7 +53,6 @@ public static class EmployeeEndpoints
             IRepository<ComposeType> repository,
             IUnitOfWork unitOfWork) =>
         {
-
             await using DbTransaction transaction = await unitOfWork.BeginTransactionAsync();
 
             await repository.AddAsync(ComposeType.CreateSingle(employeeId));
