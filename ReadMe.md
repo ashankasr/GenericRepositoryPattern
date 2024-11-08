@@ -13,10 +13,6 @@ This project demonstrates the implementation of a generic repository pattern in 
    ```sh
    git clone https://github.com/ashankasr/GenericRepositoryPattern.git
    ```
-2. Change directory
-   ```sh
-   cd GenericRepositoryPattern
-   ```
 
 ## Project Structure
 
@@ -32,6 +28,9 @@ This project demonstrates the implementation of a generic repository pattern in 
 ## How to add migrations
 
 1. Open and termial and make should you are in GenericRepositoryPattern directory
+   ```sh
+   cd GenericRepositoryPattern
+   ```
 
 2. Add the migration:
 
@@ -49,6 +48,8 @@ This project demonstrates the implementation of a generic repository pattern in 
 Run the application:
 
 ```sh
+cd GenericRepositoryPattern
+
 dotnet run
 
 ```
