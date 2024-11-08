@@ -4,3 +4,29 @@ GET {{GenericRepositoryPattern_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+GET {{GenericRepositoryPattern_HostAddress}}/Employees
+Accept: application/json
+
+###
+GET {{GenericRepositoryPattern_HostAddress}}/Employees/{id}
+Accept: application/json
+
+###
+POST {{GenericRepositoryPattern_HostAddress}}/Employees
+Content-Type: application/json
+
+{
+  "firstName": "John"
+}
+
+###
+POST {{GenericRepositoryPattern_HostAddress}}/MaritalStatus
+Content-Type: application/json
+
+{
+  "name": "Single"
+}
+
+###
+POST {{GenericRepositoryPattern_HostAddress}}/ComposeType/{employeeId}
+Content-Type: application/json
